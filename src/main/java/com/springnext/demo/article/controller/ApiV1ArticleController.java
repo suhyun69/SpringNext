@@ -3,9 +3,9 @@ package com.springnext.demo.article.controller;
 import com.springnext.demo.article.controller.request.ArticleRequest;
 import com.springnext.demo.article.entity.Article;
 import com.springnext.demo.article.service.ArticleService;
+import com.springnext.demo.global.RsData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -54,11 +54,11 @@ public class ApiV1ArticleController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Article> getArticle(@PathVariable Long id) {
+    public ResponseEntity<RsData<Article>> getArticle(@PathVariable("id") Long id) {
         Article article = articleService.findById(id);
 
         return ResponseEntity
                 .ok()
-                .body(article);
+                .body(RsData.of("S-1", "성공", article));
     }
 }
