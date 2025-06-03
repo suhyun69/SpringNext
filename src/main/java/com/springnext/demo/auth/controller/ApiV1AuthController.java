@@ -4,14 +4,16 @@ import com.springnext.demo.auth.controller.request.AuthRequest;
 import com.springnext.demo.auth.controller.response.AuthResponse;
 import com.springnext.demo.security.CustomUserDetailsService;
 import com.springnext.demo.security.JwtUtil;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -38,4 +40,21 @@ public class ApiV1AuthController {
 
         return ResponseEntity.ok(new AuthResponse(jwt));
     }
+
+    // ✅ 토큰 유효성 및 payload 확인용 엔드포인트
+    @GetMapping("/validate")
+    public ResponseEntity<?> validateToken(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
+        }
+
+        String username = authentication.getName(); // JWT로부터 추출된 사용자 이름
+
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("username", username);
+        payload.put("message", "Token is valid");
+
+        return ResponseEntity.ok(payload);
+    }
+
 }
