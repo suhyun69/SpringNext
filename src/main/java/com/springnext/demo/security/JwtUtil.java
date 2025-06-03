@@ -1,4 +1,4 @@
-package com.springnext.demo.config;
+package com.springnext.demo.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

@@ -1,4 +1,4 @@
-package com.springnext.demo.member.service;
+package com.springnext.demo.security;
 
 import com.springnext.demo.member.entity.User;
 import com.springnext.demo.member.repository.UserRepository;
