@@ -1,6 +1,8 @@
 package com.springnext.demo.article.controller;
 
 import com.springnext.demo.article.controller.request.ArticleRequest;
+import com.springnext.demo.article.controller.response.ArticleResponse;
+import com.springnext.demo.article.controller.response.ArticlesResponse;
 import com.springnext.demo.article.entity.Article;
 import com.springnext.demo.article.service.ArticleService;
 import com.springnext.demo.global.RsData;
@@ -12,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -44,17 +45,16 @@ public class ApiV1ArticleController {
     @GetMapping("")
     // @ResponseStatus(code = HttpStatus.OK) // ResponseEntitiy.ok()와 중복됨
     @Operation(summary = "Article 전체 조회", description = "전체 Article을 조회합니다.")
-    public ResponseEntity<List<Article>> getArticles() {
+    public ResponseEntity<RsData<ArticlesResponse>> getArticles() {
 
         List<Article> articles = articleService.findAll();
-
         return ResponseEntity
                 .ok()
-                .body(articles);
+                .body(RsData.of("S-1", "성공", new ArticlesResponse(articles)));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RsData<Article>> getArticle(@PathVariable("id") Long id) {
+    public ResponseEntity<RsData<ArticleResponse>> getArticle(@PathVariable("id") Long id) {
 
         return ResponseEntity
                 .ok()
@@ -62,10 +62,11 @@ public class ApiV1ArticleController {
                     .map(article -> RsData.of(
                             "S-1",
                             "성공",
-                                article
+                            new ArticleResponse(article)
                     )).orElseGet(() -> RsData.of(
                             "F-1",
-                            "%d번 게시물은 존재하지 않습니다".formatted(id)
+                                "%d번 게시물은 존재하지 않습니다".formatted(id),
+                            null
                     ))
                 );
     }
