@@ -55,10 +55,18 @@ public class ApiV1ArticleController {
 
     @GetMapping("/{id}")
     public ResponseEntity<RsData<Article>> getArticle(@PathVariable("id") Long id) {
-        Article article = articleService.findById(id);
 
         return ResponseEntity
                 .ok()
-                .body(RsData.of("S-1", "성공", article));
+                .body(articleService.findById(id)
+                    .map(article -> RsData.of(
+                            "S-1",
+                            "성공",
+                                article
+                    )).orElseGet(() -> RsData.of(
+                            "F-1",
+                            "%d번 게시물은 존재하지 않습니다".formatted(id)
+                    ))
+                );
     }
 }
