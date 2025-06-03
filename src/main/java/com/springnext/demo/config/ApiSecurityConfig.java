@@ -18,6 +18,7 @@ public class ApiSecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/*/articles").permitAll()
                         .requestMatchers("/api/*/articles/*").permitAll()
+                        .requestMatchers("/api/*/members").permitAll()
                         .requestMatchers("/api/*/members/*").permitAll()
                         .anyRequest().authenticated()
                 )
