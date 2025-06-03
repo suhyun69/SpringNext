@@ -1,6 +1,5 @@
-package com.springnext.demo.member.service;
+package com.springnext.demo.security;
 
-import com.springnext.demo.security.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

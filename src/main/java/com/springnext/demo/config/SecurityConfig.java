@@ -1,6 +1,6 @@
 package com.springnext.demo.config;
 
-import com.springnext.demo.member.service.JwtRequestFilter;
+import com.springnext.demo.security.JwtRequestFilter;
 import com.springnext.demo.security.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -73,7 +73,11 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/auth/**",           // 로그인, 회원가입 등 공개 경로
+                                "/auth/**",
+                                "/swagger-ui/**",         // swagger 정적 파일
+                                "/v3/api-docs/**",        // swagger JSON
+                                "/swagger-resources/**",  // UI 설정 리소스
+                                "/webjars/**",            // Swagger에서 사용하는 정적 JS/CSS
                                 "/h2-console/**"
                         ).permitAll()
                         .anyRequest().authenticated()
