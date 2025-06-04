@@ -42,34 +42,20 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
-    /*
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/**").permitAll()
-                )
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/h2-console/**")
-                )
-                .headers(headers -> headers
-                        .defaultsDisabled()
-                        .addHeaderWriter(
-                                new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)
-                        )
-                );
-
-        return http.build();
-    }
-    */
-
     /**
      * Spring Security 필터 체인 설정
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        // 필터 등록, 전역 보안 정책 적용
+        // 주로 웹 전체에 적용되는 JWT 인증, 로그인, Swagger 허용 등
+
+        // Swagger, h2-console 등만 허용
         http
-                .csrf(AbstractHttpConfigurer::disable
+                .securityMatcher("/**") // default
+                .csrf(AbstractHttpConfigurer::disable)
+                .headers(headers -> headers
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
@@ -80,19 +66,8 @@ public class SecurityConfig {
                                 "/webjars/**",            // Swagger에서 사용하는 정적 JS/CSS
                                 "/h2-console/**"
                         ).permitAll()
-                        .anyRequest().authenticated()
-                )
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .headers(headers -> headers
-                        .defaultsDisabled()
-                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
-                        .addHeaderWriter(
-                                new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)
-                        )
-                )
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+                        .anyRequest().denyAll()
+                );
 
         return http.build();
     }
